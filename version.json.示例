@@ -1,0 +1,7 @@
+{
+  "versionCode": 40,
+  "versionName": "2.30",
+  "note": "这一版的改动说明（App 里「检查更新」会显示这段文字）",
+  "url": "https://你的域名/linji/linji-2.30.apk",
+  "md5": "把 linji-2.30.apk 的 md5 填这里（md5sum linji-2.30.apk）"
+}
