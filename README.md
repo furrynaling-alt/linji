@@ -20,13 +20,13 @@
 ## 1. 下载（二选一）
 
 **A. 服务器直链（国内快，推荐）**
-- 安装包：`https://furry.gov.naling.net/linji/linji-2.30.apk`
+- 安装包：`https://furry.gov.naling.net/linji/linji-2.38.apk`
 - 更新清单：`https://furry.gov.naling.net/linji/version.json`
 
 **B. GitHub（项目主页 + Releases）**
 - 项目主页：https://github.com/furrynaling-alt/linji
 - 下载页：https://github.com/furrynaling-alt/linji/releases/latest
-  - `linji-2.30.apk` → 装到手机
+  - `linji-2.38.apk` → 装到手机
   - `linji-deploy.zip` → 服务器要用的一整套文件（就是下面第 2 步要传的那些）
 
 > 手机装 APK 时如果提示「不允许安装未知应用」，去 **设置 → 应用 → 允许安装未知应用** 打开就行。
@@ -39,7 +39,7 @@
 
 | 文件 | 传到哪 | 干什么用的 | 必须吗 |
 |---|---|---|---|
-| `linji-2.30.apk` | `你的站/linji/` | App 点「检查更新」时下载它 | 想要更新就要 |
+| `linji-2.38.apk` | `你的站/linji/` | App 点「检查更新」时下载它 | 想要更新就要 |
 | `version.json` | `你的站/linji/` | 更新清单：告诉 App 有没有新版 | 想要更新就要 |
 | `bridge.php` | `你的站/linji/` | 手机 ↔ 服务器通道（睡眠/待办/远程改设置） | 可选 |
 
@@ -47,14 +47,14 @@
 
 ```json
 {
-  "versionCode": 40,
-  "versionName": "2.30",
+  "versionCode": 48,
+  "versionName": "2.38",
   "note": "这一版的说明，App 里会显示这段字",
-  "url": "https://你的域名/linji/linji-2.30.apk",
+  "url": "https://你的域名/linji/linji-2.38.apk",
   "md5": "把 apk 的 md5 填这里"
 }
 ```
-算 md5：`md5sum linji-2.30.apk`
+算 md5：`md5sum linji-2.38.apk`
 
 **上传方式**（任选）：
 - 宝塔面板 → 文件 → 进目录 → 上传
@@ -63,7 +63,7 @@
   ssh root@你的服务器IP
   mkdir -p /www/wwwroot/你的站/linji
   # 在你自己电脑上：
-  scp linji-2.30.apk version.json bridge.php root@你的服务器IP:/www/wwwroot/你的站/linji/
+  scp linji-2.38.apk version.json bridge.php root@你的服务器IP:/www/wwwroot/你的站/linji/
   ```
 
 ---
@@ -185,4 +185,4 @@ App 里的数据（打卡/睡眠/记账/待办）都在手机本地，换手机�
 
 ---
 
-**一句话总结**：装 APK → 把 `linji-2.30.apk` + `version.json`（+ `bridge.php`）**上传**到服务器 `你的站/linji/` → App 里填服务器地址和口令 → 完事。
+**一句话总结**：装 APK → 把 `linji-2.38.apk` + `version.json`（+ `bridge.php`）**上传**到服务器 `你的站/linji/` → App 里填服务器地址和口令 → 完事。
