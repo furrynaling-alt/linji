@@ -186,3 +186,52 @@ App 里的数据（打卡/睡眠/记账/待办）都在手机本地，换手机�
 ---
 
 **一句话总结**：装 APK → 把 `linji-2.38.apk` + `version.json`（+ `bridge.php`）**上传**到服务器 `你的站/linji/` → App 里填服务器地址和口令 → 完事。
+
+---
+
+## 9. 进阶：让 SSH 也走 443（手机在国内 + 服务器在海外时**必做**）
+
+裸 IP 的**高端口**（比如 16598）在国内常被丢包，表现为：SSH 能连上但卡住、或报
+`channel is not opened`。因为 **443 端口最"正常"**，把 SSH 塞进 443 就稳了 —— 而且**不用域名、不用 Cloudflare**。
+
+原理：443 端口先看客户端第一个包 —— 是 TLS 就去网站，是 SSH 就转给 sshd。一个端口同时干两件事。
+
+```bash
+# 1) 装 nginx 的 stream 模块（Ubuntu/Debian）
+apt-get install -y libnginx-mod-stream
+
+# 2) 把网站从 443 挪到 8443：站点配置里所有
+#    listen 443 ssl;   →   listen 8443 ssl;
+#    并在 nginx.conf 的 http{} 里加一行： port_in_redirect off;
+
+# 3) 在 nginx.conf 顶层（http{} 外面）加这个 stream 块
+```
+```nginx
+stream {
+    map $ssl_preread_protocol $linji_backend {
+        ""      127.0.0.1:22;      # 非 TLS（SSH）→ sshd（你实际的 SSH 端口）
+        default 127.0.0.1:8443;    # TLS（https）→ nginx
+    }
+    server {
+        listen 443;
+        listen [::]:443;
+        proxy_pass $linji_backend;
+        ssl_preread on;
+        proxy_timeout 300s;
+        proxy_connect_timeout 10s;
+    }
+}
+```
+```bash
+# 4) 检查并生效
+nginx -t && systemctl reload nginx
+
+# 5) 验证两件事
+curl -I https://你的域名          # 网站照常 200
+ssh -p 443 root@你的IP            # 能走到「要密码/公钥」那一步 = 通了
+```
+然后 App 里 **IP 栏就填 `你的IP:443`**（不是那个高端口）。
+
+> 实测记录（2026-09-22）：国内手机直连美国 IP 的高端口会出现 `Session.connect Read timed out` /
+> `channel is not opened`；改成 443 后，从香港、以及本机转发都一次握手成功。
+
